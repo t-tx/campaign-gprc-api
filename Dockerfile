@@ -38,5 +38,6 @@ FROM alpine
 COPY --from=swagger-ui /swagger-ui/dist /public
 COPY --from=builder /app/bin /app/bin
 COPY swagger.json /app/swagger.json
+COPY scripts /app/scripts
 WORKDIR /app
 CMD ["./bin", "serve"]
