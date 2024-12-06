@@ -1,5 +1,5 @@
 
-# Project Name
+# Campaign Service
 
 This project uses Docker Compose for container management and Protocol Buffers (`protoc`) for generating Go and gRPC code. Below are the steps to build, run, and clean up the project using the Makefile.
 
