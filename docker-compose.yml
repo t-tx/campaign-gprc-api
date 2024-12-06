@@ -12,11 +12,23 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "-d", "campaign"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
   redis:
     image: redis:7.4.1
     container_name: redis_container
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
   golang:
     build:
       context: .
