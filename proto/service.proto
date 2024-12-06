@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package servicepb;
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+
+option go_package = "proto/generate/servicepb";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Campaign API"
+    description: "This is the Campaign API"
+    version: "1.0"
+  };
+  schemes: [HTTP, HTTPS]
+  consumes: "application/json"
+  produces: "application/json"
+  responses: {
+    key: "404"
+    value: {
+      description: "Returned when the resource does not exist."
+      schema: {
+        json_schema: {
+          type: STRING
+        };
+      };
+    };
+  };
+  security_definitions: {
+    security: {
+        key: "Token"
+        value: {
+            type: TYPE_API_KEY
+            in: IN_HEADER
+            name: "Token"
+        }
+        },
+   
+  }
+  security: {
+      security_requirement: {
+        key: "Token",
+      },
+  }
+};
+
+service CampaignService {
+  rpc CreateCampaign(CreateCampaignRequest) returns (CreateCampaignReply) {
+    option (google.api.http) = {
+      post: "/campaign"
+      body: "*"
+    };
+  }
+
+  rpc GetCampaign(GetCampaignRequest) returns (GetCampaignReply) {
+    option (google.api.http) = {
+      get: "/campaign"
+    };
+  }
+  rpc SignUp(SignUpRequest) returns (SignUpReply) {
+    option (google.api.http) = {
+      post: "/signup"
+      body: "*"
+    };
+  }
+  rpc SignIn(SignInRequest) returns (SignInReply) {
+    option (google.api.http) = {
+      post: "/signin"
+      body: "*"
+    };
+  }
+  rpc ListAvailableSubscription(ListAvailableSubscriptionRequest) returns (ListAvailableSubscriptionReply) {
+    option (google.api.http) = {
+      get: "/subscriptions"
+    };
+  }
+  
+  rpc SubscribeSubscription(SubscribeSubscriptionRequest) returns (SubscribeSubscriptionReply) {
+    option (google.api.http) = {
+      post: "/user/subscribe"
+      body: "*"
+    };
+  }
+
+  rpc GetUserSubscription(GetUserSubscriptionRequest) returns (GetUserSubscriptionReply) {
+    option (google.api.http) = {
+      get: "/user/subscription"
+    };
+  }
+  rpc UserInfo(UserInfoRequest) returns (UserInfoReply) {
+    option (google.api.http) = {
+      get: "/user"      
+    };
+  }
+}
+
+message CreateCampaignRequest {
+  google.protobuf.Timestamp valid_from = 1 [json_name="valid_from"];
+  google.protobuf.Timestamp valid_to = 2 [json_name="valid_to"];
+  int32 slot = 3;
+}
+
+message CreateCampaignReply {
+  string id = 1;        
+}
+
+message GetCampaignRequest {
+  string id = 1;
+
+}
+
+message GetCampaignReply {
+  string url = 1;
+  google.protobuf.Timestamp valid_from = 2;
+  google.protobuf.Timestamp valid_to = 3;
+  string status = 4;
+  int32 slot = 5;
+  int32 remaining = 6;
+}
+message SignUpRequest {
+  string username = 1;
+  string password = 2;
+  string campaign_id = 3 [json_name="campaign_id"];
+}
+
+message SignUpReply {
+  string status = 1;
+}
+
+message SignInRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message SignInReply {
+  string token = 1;
+}
+
+message ListAvailableSubscriptionRequest {
+}
+
+message ListAvailableSubscriptionReplyData{
+  string id = 1;
+  string name = 2;
+  string price = 7;
+  string discount = 3;
+}
+
+message ListAvailableSubscriptionReply {
+  repeated ListAvailableSubscriptionReplyData data = 1;
+}
+
+message SubscribeSubscriptionRequest {
+  string subscription_id = 1 [json_name="subscription_id"]; 
+  string campaign_id = 2 [json_name="campaign_id"];
+}
+
+message SubscribeSubscriptionReply {
+  string status = 1;
+}
+
+message UserInfoRequest {
+}
+
+message UserInfoReply {
+  string username = 1;
+  string campaign_id = 2[json_name="campaign_id"];
+}
+
+message GetUserSubscriptionRequest {
+}
+
+message GetUserSubscriptionReply {
+  string subscription_id = 1 [json_name="subscription_id"];
+  string status = 5;
+}

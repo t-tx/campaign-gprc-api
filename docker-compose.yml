@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: campaign
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7.4.1
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+  golang:
+    build:
+      context: .
+      dockerfile: Dockerfile      
+    container_name: campaign_container
+    command: ["/bin/sh", "-c", "./bin migrate && ./bin serve"]
+    ports:
+      - "8000:8000"
+    environment:
+      CACHE_HOST: redis:6379
+      DB_HOST: postgres:5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: campaign
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
