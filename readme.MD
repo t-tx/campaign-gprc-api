@@ -104,4 +104,5 @@ To get started, follow these steps:
 
 ## License
 
-Include your license information here.
+MIT License
+```
