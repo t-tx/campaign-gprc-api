@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"campaign/internal/db"
-
+	"os"
 	"github.com/spf13/cobra"
 )
 
@@ -22,9 +22,13 @@ var migrationCmd = &cobra.Command{
 		username := "user"
 		password := "password"
 		dbname := "campaign"
-		host := "192.168.50.12:5433"
 
-		dbClient := db.Get(host, dbname, username, password)
+		dbHost := os.Getenv("DB_HOST")
+		if dbHost == "" {
+			dbHost = "192.168.50.12:5433"
+		}
+
+		dbClient := db.Get(dbHost, dbname, username, password)
 
 		db.RunMigrations("scripts", dbClient)
 	},
