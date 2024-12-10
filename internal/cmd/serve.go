@@ -42,6 +42,8 @@ var serveCmd = &cobra.Command{
 		}, "campaign", 8000)
 
 		server.AddInterceptors(pkg.AuthInterceptor("token", jwtSecret))
+		server.AddInterceptors(pkg.LogInterceptor())
+
 		server.RegisterGW(servicepb.RegisterCampaignServiceHandlerFromEndpoint)
 
 		server.Run()
